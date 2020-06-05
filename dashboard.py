@@ -24,14 +24,14 @@ try:
     url += "sources=bbc-news"
     url += "&apiKey=72d48922d4644d03bcda247a8ba59479"
 
-    articles = ""
+    articles = []
 
     response = requests.get(url)
     print("got news")
     data = response.json()
 
     for article in data['articles']:
-        articles += "      " + article['description']
+        articles.append(article['title'])
     
     epd = epd2in13_V2.EPD()
     epd.init(epd.FULL_UPDATE)
@@ -60,11 +60,13 @@ try:
         now = datetime.now()
         dateTimeInfo = now.strftime("%B %d, %H:%M")
 
-        time_draw.rectangle(((0, 50), (epd.width, 70)), fill = 255)
+        time_draw.rectangle(((0, 10), (100, 70)), fill = 255)
         time_draw.text((10, 10), dateTimeInfo, font = timeFont, fill = 0)
-        time_draw.text((10-num*4, 50), articles, font = newsFont, fill = 0)
+        time_draw.text((10, 50), articles[num%len(articles)], font = newsFont, fill = 0)
         epd.displayPartial(epd.getbuffer(time_image))
         num = num + 1
+
+        time.sleep(2)
 
         if(num == 50):
             break
