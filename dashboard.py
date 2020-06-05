@@ -57,7 +57,7 @@ try:
 
     dateTimeStr = ""
 
-    newsPos = epd.width-30
+    newsPos = epd.width-20
     slideX = 0
     newsIndex = 0
 
@@ -73,8 +73,8 @@ try:
             time_draw.text((10, 10), dateTimeStr, font = timeFont, fill = 0)
 
         # updating news section
-        time_draw.rectangle(((0, newsPos), (epd.height, newsPos+newsFont.getsize(articles[0])[1])), fill = 255)
-        time_draw.text((epd.height-slideX*5, newsPos), articles[newsIndex], font = newsFont, fill = 0)
+        time_draw.text((epd.height-slideX*5, newsPos), articles[newsIndex], font = newsFont, fill = 255)
+        time_draw.rectangle(((0, newsPos), (epd.height, epd.width-newsPos), fill = 0)
 
         if (epd.height+(newsFont.getsize(articles[newsIndex])[0])-slideX*5) < 0:
             slideX = 0
