@@ -24,14 +24,23 @@ try:
     url += "sources=bbc-news"
     url += "&apiKey=72d48922d4644d03bcda247a8ba59479"
 
-    articles = []
-
     response = requests.get(url)
     print("got news")
     data = response.json()
 
+    articles = []
     for article in data['articles']:
         articles.append(article['title'])
+
+
+    weatherUrl = "http://api.openweathermap.org/data/2.5/weather?"
+    weatherUrl += "q=Deal"
+    weatherUrl += "&appid=b1fef35e73e92d824c8b42ea70b5e913"
+
+    response = requests.get(weatherUrl)
+    print("got weather")
+    weatherData = response.json()
+    weatherStr = "Weather in Deal : " + weatherData['weather'][0]['main']
     
     epd = epd2in13_V2.EPD()
     epd.init(epd.FULL_UPDATE)
@@ -42,6 +51,7 @@ try:
     font18 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 18)
 
     timeFont = ImageFont.truetype('Bellota-Regular.ttf', 22)
+    weatherFont = ImageFont.truetype('OpenSans-Regular.ttf', 16)
     newsFont = ImageFont.truetype('OpenSans-Regular.ttf', 14)
     
     print("height : " + str(epd.height))
@@ -58,6 +68,8 @@ try:
     dateTimeStr = ""
     dateTimePosY = 10
 
+    weatherPosY = 50
+
     newsPosY = epd.width-20
     slideX = 0
     newsIndex = 0
@@ -66,12 +78,15 @@ try:
 
     while (True):
 
-        # updating time
+        # updating time section
         now = datetime.now()
         if dateTimeStr != now.strftime("%B %d, %H:%M"):
             dateTimeStr = now.strftime("%B %d, %H:%M")
-            time_draw.rectangle(((0, dateTimePosY), (epd.height, dateTimePosY+newsFont.getsize(dateTimeStr)[1])), fill = 255)
+            time_draw.rectangle(((0, dateTimePosY), (epd.height, dateTimePosY+timeFont.getsize(dateTimeStr)[1])), fill = 255)
             time_draw.text((10, 10), dateTimeStr, font = timeFont, fill = 0)
+
+        # updating weather section
+        time_draw.text((weatherFont.getsize(weatherStr)[0]/2 + epd.height/2, weatherPosY), weatherStr, font = weatherFont, fill = 0)
 
         # updating news section
         time_draw.rectangle(((0, newsPosY), (epd.height, epd.width)), fill = 0)
