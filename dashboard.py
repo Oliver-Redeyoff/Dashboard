@@ -74,7 +74,7 @@ try:
 
         # updating news section
         time_draw.text((epd.height-slideX*5, newsPos), articles[newsIndex], font = newsFont, fill = 255)
-        time_draw.rectangle(((0, newsPos), (epd.height, epd.width-newsPos)), fill = 0)
+        time_draw.rectangle(((0, newsPos), (epd.height, newsPos+epd.width-newsPos)), fill = 0)
 
         if (epd.height+(newsFont.getsize(articles[newsIndex])[0])-slideX*5) < 0:
             slideX = 0
