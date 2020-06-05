@@ -62,7 +62,7 @@ try:
 
         time_draw.rectangle(((0, 10), (epd.height, 70)), fill = 255)
         time_draw.text((10, 10), dateTimeInfo, font = timeFont, fill = 0)
-        time_draw.text((10-num, 50), articles[0], font = newsFont, fill = 0)
+        time_draw.text((10-num*4, 50), articles[0], font = newsFont, fill = 0)
         epd.displayPartial(epd.getbuffer(time_image))
         num = num + 1
 
