@@ -60,13 +60,13 @@ try:
         now = datetime.now()
         dateTimeInfo = now.strftime("%B %d, %H:%M")
 
-        time_draw.rectangle((10, 10, 240, 80), fill = 255)
+        time_draw.rectangle((0, 10, epd.width, 80), fill = 255)
         time_draw.text((10, 10), dateTimeInfo, font = timeFont, fill = 0)
-        time_draw.text((10-num, 50), articles, font = newsFont, fill = 0)
+        time_draw.text((10-num*4, 50), articles, font = newsFont, fill = 0)
         epd.displayPartial(epd.getbuffer(time_image))
         num = num + 1
 
-        if(num == 100):
+        if(num == 50):
             break
     
     
