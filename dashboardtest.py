@@ -22,7 +22,7 @@ newsFont = ImageFont.truetype('OpenSans-Regular.ttf', 14)
 time_image = Image.new('1', (250, 122), 255)
 time_draw = ImageDraw.Draw(time_image)
 
-print(newsFont.getsize(articles))
+print(newsFont.getsize(articles)[0])
 
 time_draw.text((10, 10), "dateTimeInfo", font = timeFont, fill = 0)
 time_draw.text((-100, 50), articles, font = newsFont, fill = 0)

@@ -54,21 +54,32 @@ try:
     epd.displayPartBaseImage(epd.getbuffer(time_image))
     
     epd.init(epd.PART_UPDATE)
+
+    dateTimeStr = ""
+    slideX = 0
     num = 0
+
     while (True):
 
+        # updating time
         now = datetime.now()
-        dateTimeInfo = now.strftime("%B %d, %H:%M")
+        if dateTimeStr != now.strftime("%B %d, %H:%M"):
+            dateTimeStr = now.strftime("%B %d, %H:%M")
+            time_draw.rectangle(((0, 10), (epd.height, newsFont.getsize(dateTimeStr)[1]), fill = 255)
+            time_draw.text((10, 10), dateTimeStr, font = timeFont, fill = 0)
 
-        time_draw.rectangle(((0, 10), (epd.height, 70)), fill = 255)
-        time_draw.text((10, 10), dateTimeInfo, font = timeFont, fill = 0)
-        time_draw.text((10-num*4, 50), articles[0], font = newsFont, fill = 0)
+        # updating news section
+        time_draw.rectangle(((0, 10), (epd.height, newsFont.getsize(dateTimeStr)[1]), fill = 255)
+        time_draw.text((10-slideX*5, 50), articles[0], font = newsFont, fill = 0)
+        if 10+newsFont.getsize(articles)[0]-slideX*5 < 0:
+            slideX == 0
+        slideX += 1
+
+
         epd.displayPartial(epd.getbuffer(time_image))
         num = num + 1
 
-        # time.sleep(2)
-
-        if(num == 50):
+        if(num == 100):
             break
     
     
