@@ -86,7 +86,7 @@ try:
             time_draw.text((10, 10), dateTimeStr, font = timeFont, fill = 0)
 
         # updating weather section
-        time_draw.text((weatherFont.getsize(weatherStr)[0]/2 + epd.height/2, weatherPosY), weatherStr, font = weatherFont, fill = 0)
+        time_draw.text((epd.height/2 - weatherFont.getsize(weatherStr)[0]/2, weatherPosY), weatherStr, font = weatherFont, fill = 0)
 
         # updating news section
         time_draw.rectangle(((0, newsPosY), (epd.height, epd.width)), fill = 0)
