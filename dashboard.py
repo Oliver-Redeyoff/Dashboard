@@ -72,7 +72,8 @@ try:
         time_draw.rectangle(((0, 50), (epd.height, 70)), fill = 255)
         time_draw.text((10-slideX*5, 50), articles[0], font = newsFont, fill = 0)
         
-        print(10+(newsFont.getsize(articles[0])[0])-slideX*5))
+        print(10+(newsFont.getsize(articles[0])[0])-slideX*5)
+
         if (10+(newsFont.getsize(articles[0])[0])-slideX*5) < 0:
             slideX = 0
         slideX += 1
