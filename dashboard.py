@@ -56,8 +56,9 @@ try:
     epd.init(epd.PART_UPDATE)
 
     dateTimeStr = ""
+    dateTimePosY = 10
 
-    newsPos = epd.width-20
+    newsPosY = epd.width-20
     slideX = 0
     newsIndex = 0
 
@@ -69,12 +70,12 @@ try:
         now = datetime.now()
         if dateTimeStr != now.strftime("%B %d, %H:%M"):
             dateTimeStr = now.strftime("%B %d, %H:%M")
-            time_draw.rectangle(((0, 10), (epd.height, 1+newsFont.getsize(dateTimeStr)[1])), fill = 255)
+            time_draw.rectangle(((0, dateTimePosY), (epd.height, dateTimePosY+newsFont.getsize(dateTimeStr)[1])), fill = 255)
             time_draw.text((10, 10), dateTimeStr, font = timeFont, fill = 0)
 
         # updating news section
-        time_draw.rectangle(((0, newsPos), (epd.height, newsPos+epd.width-newsPos)), fill = 0)
-        time_draw.text((epd.height-slideX*5, newsPos), articles[newsIndex], font = newsFont, fill = 255)
+        time_draw.rectangle(((0, newsPosY), (epd.height, epd.width)), fill = 0)
+        time_draw.text((epd.height-slideX*5, newsPosY), articles[newsIndex], font = newsFont, fill = 255)
 
         if (epd.height+(newsFont.getsize(articles[newsIndex])[0])-slideX*5) < 0:
             slideX = 0
@@ -85,7 +86,7 @@ try:
         epd.displayPartial(epd.getbuffer(time_image))
         num = num + 1
 
-        if(num == 100):
+        if(num == 200):
             break
     
     
