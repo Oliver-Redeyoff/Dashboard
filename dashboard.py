@@ -24,14 +24,14 @@ try:
     url += "sources=bbc-news"
     url += "&apiKey=72d48922d4644d03bcda247a8ba59479"
 
-    articles = []
+    articles = ""
 
     response = requests.get(url)
     print("got news")
     data = response.json()
 
     for article in data['articles']:
-        articles.append(article['description'])
+        articles += "      " + article['description']
     
     epd = epd2in13_V2.EPD()
     epd.init(epd.FULL_UPDATE)
@@ -40,6 +40,9 @@ try:
     # Defining fonts
     font15 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 15)
     font18 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 18)
+
+    timeFont = ImageFont.truetype('Bellota-Regular.ttf', 22)
+    newsFont = ImageFont.truetype('OpenSans-Regular.ttf', 14)
     
     print("height : " + str(epd.height))
     print("width : " + str(epd.width))
@@ -57,15 +60,13 @@ try:
         now = datetime.now()
         dateTimeInfo = now.strftime("%B %d, %H:%M")
 
-        time_draw.rectangle((10, 10, 230, 70), fill = 255)
-        time_draw.text((10, 10), dateTimeInfo, font = font18, fill = 0)
-        time_draw.text((10, 50), articles[num], font = font15, fill = 0)
+        time_draw.rectangle((10, 10, 240, 80), fill = 255)
+        time_draw.text((10, 10), dateTimeInfo, font = timeFont, fill = 0)
+        time_draw.text((10-num, 50), articles, font = newsFont, fill = 0)
         epd.displayPartial(epd.getbuffer(time_image))
         num = num + 1
 
-        time.sleep(3)
-
-        if(num == 9):
+        if(num == 100):
             break
     
     
