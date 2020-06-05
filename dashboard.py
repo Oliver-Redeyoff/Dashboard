@@ -39,7 +39,7 @@ try:
     
     # Defining fonts
     font15 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 15)
-    font24 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 24)
+    font18 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 18)
     
     print("height : " + str(epd.height))
     print("width : " + str(epd.width))
@@ -57,13 +57,13 @@ try:
         now = datetime.now()
         dateTimeInfo = now.strftime("%B %d, %H:%M")
 
-        time_draw.rectangle((10, 10, 220, 100), fill = 255)
-        time_draw.text((10, 10), dateTimeInfo, font = font15, fill = 0)
-        time_draw.text((10, 40), articles[num], font = font15, fill = 0)
+        time_draw.rectangle((10, 10, 230, 70), fill = 255)
+        time_draw.text((10, 10), dateTimeInfo, font = font18, fill = 0)
+        time_draw.text((10, 50), articles[num], font = font15, fill = 0)
         epd.displayPartial(epd.getbuffer(time_image))
         num = num + 1
 
-        time.sleep(2)
+        time.sleep(3)
 
         if(num == 9):
             break
