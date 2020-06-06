@@ -1,5 +1,3 @@
-#!/usr/bin/python
-# -*- coding:utf-8 -*-
 import sys
 import os
 picdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'pic')
@@ -13,9 +11,24 @@ import json
 from datetime import datetime
 from waveshare_epd import epd2in13_V2
 import time
+import sched
 from PIL import Image,ImageDraw,ImageFont
 import traceback
 from io import BytesIO
+
+
+articles = []
+weatherIcon = None
+syncFrequency = 10
+
+
+def sync():
+    global articles, weatherIcon, syncFrequency
+
+    articles = getNews()
+    weatherIcon = getWeather()
+
+    s.enter(syncFrequency, 1, sync, kwargs={'a': 'keyword'})
 
 def getNews():
     url = "https://newsapi.org/v2/top-headlines?" 
@@ -50,11 +63,10 @@ def getWeather():
 
 try:
 
-    # get news
-    articles = getNews()
+    s = sched.scheduler(time.time, time.sleep)
 
-    # get weather
-    weatherIcon = getWeather()
+    # get new weather and news data
+    sync()
     
     epd = epd2in13_V2.EPD()
     epd.init(epd.FULL_UPDATE)
@@ -83,8 +95,6 @@ try:
 
     weatherPosY = 50
 
-    greeting = "Good morning Oliver"
-
     newsPosY = epd.width-20
     slideX = 0
     newsIndex = 0
@@ -101,7 +111,6 @@ try:
             time_draw.text((10, 10), dateTimeStr, font = timeFont, fill = 0)
 
         # updating weather section
-        time_draw.text((epd.height/2 - greetingFont.getsize(greeting)[0]/2, weatherPosY), greeting, font = greetingFont, fill = 0)
         time_draw.bitmap((250-weatherIcon.size[0], 0), weatherIcon)
 
         # updating news section
