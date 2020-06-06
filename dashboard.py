@@ -17,10 +17,7 @@ from PIL import Image,ImageDraw,ImageFont
 import traceback
 from io import BytesIO
 
-
-try:
-
-    # get news
+def getNews():
     url = "https://newsapi.org/v2/top-headlines?" 
     url += "sources=bbc-news"
     url += "&apiKey=72d48922d4644d03bcda247a8ba59479"
@@ -32,8 +29,29 @@ try:
     articles = []
     for article in data['articles']:
         articles.append(article['title'])
+    
+    return articles
+
+def getWeather():
+    weatherUrl = "http://api.openweathermap.org/data/2.5/weather?"
+    weatherUrl += "q=Deal"
+    weatherUrl += "&appid=b1fef35e73e92d824c8b42ea70b5e913"
+
+    response = requests.get(weatherUrl)
+    print("got weather")
+    weatherData = response.json()
+    weatherStr = "Weather in Deal : " + weatherData['weather'][0]['main']
+
+    iconResponse = requests.get("http://openweathermap.org/img/wn/" + weatherData['weather'][0]['icon'] + ".png")
+    weatherIcon = Image.open(BytesIO(iconResponse.content))
 
 
+try:
+
+    # get news
+    articles = getNews()
+
+    # get weather
     weatherUrl = "http://api.openweathermap.org/data/2.5/weather?"
     weatherUrl += "q=Deal"
     weatherUrl += "&appid=b1fef35e73e92d824c8b42ea70b5e913"
