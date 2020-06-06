@@ -15,6 +15,7 @@ from waveshare_epd import epd2in13_V2
 import time
 from PIL import Image,ImageDraw,ImageFont
 import traceback
+from io import BytesIO
 
 
 try:
@@ -41,6 +42,9 @@ try:
     print("got weather")
     weatherData = response.json()
     weatherStr = "Weather in Deal : " + weatherData['weather'][0]['main']
+
+    iconResponse = requests.get("http://openweathermap.org/img/wn/" + weatherData['weather'][0]['icon'] + ".png")
+    weatherIcon = Image.open(BytesIO(iconResponse.content))
     
     epd = epd2in13_V2.EPD()
     epd.init(epd.FULL_UPDATE)
@@ -87,6 +91,7 @@ try:
 
         # updating weather section
         time_draw.text((epd.height/2 - weatherFont.getsize(weatherStr)[0]/2, weatherPosY), weatherStr, font = weatherFont, fill = 0)
+        time_draw.bitmap((250-weatherIcon.size[0], 0), weatherIcon)
 
         # updating news section
         time_draw.rectangle(((0, newsPosY), (epd.height, epd.width)), fill = 0)

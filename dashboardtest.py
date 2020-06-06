@@ -1,5 +1,6 @@
 from PIL import Image,ImageDraw,ImageFont
 import requests
+from io import BytesIO
 
 
 newsUrl = "https://newsapi.org/v2/top-headlines?" 
@@ -26,6 +27,9 @@ weatherData = response.json()
 weatherStr = "Weather in Deal : " + weatherData['weather'][0]['main']
 print(weatherData['weather'][0]['main'])
 
+response = requests.get("http://openweathermap.org/img/wn/" + weatherData['weather'][0]['icon'] + ".png")
+img = Image.open(BytesIO(response.content))
+
 
 timeFont = ImageFont.truetype('Bellota-Regular.ttf', 22)
 weatherFont = ImageFont.truetype('OpenSans-Regular.ttf', 16)
@@ -33,6 +37,8 @@ newsFont = ImageFont.truetype('OpenSans-Regular.ttf', 14)
 
 time_image = Image.new('1', (250, 122), 255)
 time_draw = ImageDraw.Draw(time_image)
+
+time_draw.bitmap((250-img.size[0], 0), img)
 
 # print(newsFont.getsize(articles)[0])
 
