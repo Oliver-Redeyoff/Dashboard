@@ -31,10 +31,11 @@ def sync():
     articles = getNews()
     weatherIcon = getWeather()
 
-    hour = int(datetime.now().hour)
+    hour = datetime.now().hour
+    print(hour)
     if hour >= 3 and hour < 12:
         greetingStr = "Good morning Oliver :)"
-    elif hour >= 12 and hour < 6:
+    elif hour >= 12 and hour < 18:
         greetingStr = "Good afternoon Oliver :)"
     elif hour >= 6 and hour < 3:
         greetingStr = "Good evening Oliver :)"
