@@ -19,16 +19,23 @@ from io import BytesIO
 
 articles = []
 weatherIcon = None
+greetingStr = ""
 syncFrequency = 10
+s = sched.scheduler(time.time, time.sleep)
 
 
 def sync():
-    global articles, weatherIcon, syncFrequency
+    global articles, weatherIcon, greetingStr, syncFrequency, s
 
+    print("syncing data")
     articles = getNews()
     weatherIcon = getWeather()
+    hour = int(datetime.datetime.now().hour)
+    greetingStr = "Good morning oliver :)" if (hour >= 3 and hour < 12) else ""
+    greetingStr = "Good afternoon oliver :)" if (hour >= 12 and hour < 6) else ""
+    greetingStr = "Good evening oliver :)" if (hour >= 6 and hour < 3) else ""
 
-    s.enter(syncFrequency, 1, sync, kwargs={'a': 'keyword'})
+    s.enter(syncFrequency, 1, sync)
 
 def getNews():
     url = "https://newsapi.org/v2/top-headlines?" 
@@ -53,7 +60,7 @@ def getWeather():
     response = requests.get(weatherUrl)
     print("got weather")
     weatherData = response.json()
-    weatherStr = "Weather in Deal : " + weatherData['weather'][0]['main']
+    # weatherStr = "Weather in Deal : " + weatherData['weather'][0]['main']
 
     iconResponse = requests.get("http://openweathermap.org/img/wn/" + weatherData['weather'][0]['icon'] + ".png")
     weatherIcon = Image.open(BytesIO(iconResponse.content))
@@ -62,8 +69,6 @@ def getWeather():
 
 
 try:
-
-    s = sched.scheduler(time.time, time.sleep)
 
     # get new weather and news data
     sync()
@@ -81,11 +86,11 @@ try:
     newsFont = ImageFont.truetype('OpenSans-Regular.ttf', 14)
     
     # this is the image that will be display on the e-display
-    time_image = Image.new('1', (epd.height, epd.width), 255)
-    time_draw = ImageDraw.Draw(time_image)
+    dash_image = Image.new('1', (epd.height, epd.width), 255)
+    dash_draw = ImageDraw.Draw(dash_image)
     
     epd.init(epd.FULL_UPDATE)
-    epd.displayPartBaseImage(epd.getbuffer(time_image))
+    epd.displayPartBaseImage(epd.getbuffer(dash_image))
     
     epd.init(epd.PART_UPDATE)
 
@@ -107,15 +112,18 @@ try:
         now = datetime.now()
         if dateTimeStr != now.strftime("%B %d, %H:%M"):
             dateTimeStr = now.strftime("%B %d, %H:%M")
-            time_draw.rectangle(((0, dateTimePosY), (epd.height, dateTimePosY+timeFont.getsize(dateTimeStr)[1])), fill = 255)
-            time_draw.text((10, 10), dateTimeStr, font = timeFont, fill = 0)
+            dash_draw.rectangle(((0, dateTimePosY), (epd.height, dateTimePosY+timeFont.getsize(dateTimeStr)[1])), fill = 255)
+            dash_draw.text((10, 10), dateTimeStr, font = timeFont, fill = 0)
 
         # updating weather section
-        time_draw.bitmap((250-weatherIcon.size[0], 0), weatherIcon)
+        dash_draw.bitmap((250-weatherIcon.size[0], 0), weatherIcon)
+
+        # updating greeting section
+        dash_draw.text((epd.height/2-greetingFont.getsize(greetingStr)[0]/2, 50), greetingStr, font = greetingFont, fill = 0)
 
         # updating news section
-        time_draw.rectangle(((0, newsPosY), (epd.height, epd.width)), fill = 0)
-        time_draw.text((epd.height-slideX*5, newsPosY), articles[newsIndex], font = newsFont, fill = 255)
+        dash_draw.rectangle(((0, newsPosY), (epd.height, epd.width)), fill = 0)
+        dash_draw.text((epd.height-slideX*5, newsPosY), articles[newsIndex], font = newsFont, fill = 255)
 
         if (epd.height+(newsFont.getsize(articles[newsIndex])[0])-slideX*5) < 0:
             slideX = 0
@@ -123,7 +131,7 @@ try:
         slideX += 1
 
 
-        epd.displayPartial(epd.getbuffer(time_image))
+        epd.displayPartial(epd.getbuffer(dash_image))
         num = num + 1
 
         if(num == 200):
