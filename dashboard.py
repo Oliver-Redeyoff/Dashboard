@@ -85,11 +85,8 @@ try:
     epd.Clear(0xFF)
     
     # Defining fonts
-    font15 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 15)
-    font18 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 18)
-
     timeFont = ImageFont.truetype('Bellota-Regular.ttf', 22)
-    greetingFont = ImageFont.truetype('OpenSans-Regular.ttf', 22)
+    greetingFont = ImageFont.truetype('OpenSans-Regular.ttf', 18)
     newsFont = ImageFont.truetype('OpenSans-Regular.ttf', 14)
     
     # this is the image that will be display on the e-display
