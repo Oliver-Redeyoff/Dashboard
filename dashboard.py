@@ -30,7 +30,7 @@ def sync():
     print("syncing data")
     articles = getNews()
     weatherIcon = getWeather()
-    hour = int(datetime.datetime.now().hour)
+    hour = int(datetime.now().hour)
     greetingStr = "Good morning oliver :)" if (hour >= 3 and hour < 12) else ""
     greetingStr = "Good afternoon oliver :)" if (hour >= 12 and hour < 6) else ""
     greetingStr = "Good evening oliver :)" if (hour >= 6 and hour < 3) else ""
