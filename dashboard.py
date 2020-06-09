@@ -80,6 +80,7 @@ try:
     # get new weather and news data
     sync()
     
+    # setting up screen and clearing
     epd = epd2in13_V2.EPD()
     epd.init(epd.FULL_UPDATE)
     epd.Clear(0xFF)
@@ -93,21 +94,17 @@ try:
     dash_image = Image.new('1', (epd.height, epd.width), 255)
     dash_draw = ImageDraw.Draw(dash_image)
     
+    # initialising part update mode
     epd.init(epd.FULL_UPDATE)
     epd.displayPartBaseImage(epd.getbuffer(dash_image))
-    
     epd.init(epd.PART_UPDATE)
-
 
     dateTimeStr = ""
     dateTimePosY = 10
-
     weatherPosY = 50
-
     newsPosY = epd.width-20
     slideX = 0
     newsIndex = 0
-
     num = 0
 
     while (True):
@@ -141,7 +138,7 @@ try:
         if(num == 200):
             break
     
-    
+    # clearing screen and going to sleep
     epd.init(epd.FULL_UPDATE)
     epd.Clear(0xFF)
     epd.sleep()
